@@ -1,0 +1,27 @@
+
+==================== 2c. Restore readiness -> Pod receives traffic again ====================
+$ kubectl exec inventory-5496d657fc-5plj6 -- rm /tmp/not-ready
+
+$ kubectl get pods -l app=inventory -o wide
+NAME                         READY   STATUS    RESTARTS   AGE   IP           NODE                    NOMINATED NODE   READINESS GATES
+inventory-5496d657fc-5plj6   1/1     Running   0          77s   10.244.0.6   module6-control-plane   <none>           <none>
+inventory-5496d657fc-m2xkh   1/1     Running   0          77s   10.244.0.5   module6-control-plane   <none>           <none>
+
+$ kubectl get endpointslices -l kubernetes.io/service-name=inventory-service -o custom-columns=NAME:.metadata.name,ADDRESSES:.endpoints[*].addresses[0],READY:.endpoints[*].conditions.ready,PODS:.endpoints[*].targetRef.name
+NAME                      ADDRESSES               READY       PODS
+inventory-service-5vqwd   10.244.0.6,10.244.0.5   true,true   inventory-5496d657fc-5plj6,inventory-5496d657fc-m2xkh
+
+$ kubectl logs deploy/inventory-client --since=8s
+[22:20:29] [client] req #67   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:30] [client] req #68   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:31] [client] req #69   -> served by inventory-5496d657fc-5plj6 (10.244.0.6) items=3
+[22:20:32] [client] req #70   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:33] [client] req #71   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:34] [client] req #72   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:35] [client] req #73   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:36] [client] req #74   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+
+# requests per Pod in the last 8s
+   1 served by inventory-5496d657fc-5plj6
+   7 served by inventory-5496d657fc-m2xkh
+

@@ -1,0 +1,20 @@
+
+==================== 1b. Client calls http://inventory-service:8080 -> both replicas answer ====================
+$ kubectl logs deploy/inventory-client --tail=12
+[22:19:42] [client] req #20   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:19:43] [client] req #21   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:19:44] [client] req #22   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:19:45] [client] req #23   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:19:46] [client] req #24   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:19:47] [client] req #25   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:19:48] [client] req #26   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:19:49] [client] req #27   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:19:50] [client] req #28   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:19:51] [client] req #29   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:19:52] [client] req #30   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:19:53] [client] req #31   -> served by inventory-5496d657fc-5plj6 (10.244.0.6) items=3
+
+# requests per Pod in the last 30s
+   8 served by inventory-5496d657fc-5plj6
+  22 served by inventory-5496d657fc-m2xkh
+

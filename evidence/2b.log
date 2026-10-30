@@ -1,0 +1,22 @@
+
+==================== 2b. While unready: Pod still Running, but gets NO traffic ====================
+# unready pod: inventory-5496d657fc-5plj6
+$ kubectl get pod inventory-5496d657fc-5plj6 -o custom-columns=NAME:.metadata.name,PHASE:.status.phase,READY:.status.containerStatuses[0].ready,RESTARTS:.status.containerStatuses[0].restartCount
+NAME                         PHASE     READY   RESTARTS
+inventory-5496d657fc-5plj6   Running   false   0
+
+$ kubectl logs deploy/inventory-client --since=10s
+[22:20:09] [client] req #47   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:10] [client] req #48   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:11] [client] req #49   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:12] [client] req #50   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:13] [client] req #51   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:14] [client] req #52   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:15] [client] req #53   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:16] [client] req #54   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:17] [client] req #55   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:18] [client] req #56   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+
+# requests per Pod in the last 10s
+  10 served by inventory-5496d657fc-m2xkh
+

@@ -1,0 +1,39 @@
+
+==================== 3b. Client keeps working through the Service during replacement ====================
+# deleted pod: inventory-5496d657fc-5plj6
+$ kubectl logs deploy/inventory-client --since=30s
+[22:20:27] [client] req #65   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:28] [client] req #66   -> served by inventory-5496d657fc-5plj6 (10.244.0.6) items=3
+[22:20:29] [client] req #67   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:30] [client] req #68   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:31] [client] req #69   -> served by inventory-5496d657fc-5plj6 (10.244.0.6) items=3
+[22:20:32] [client] req #70   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:33] [client] req #71   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:34] [client] req #72   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:35] [client] req #73   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:36] [client] req #74   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:37] [client] req #75   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:38] [client] req #76   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:39] [client] req #77   -> served by inventory-5496d657fc-5plj6 (10.244.0.6) items=3
+[22:20:40] [client] req #78   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:41] [client] req #79   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:42] [client] req #80   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:43] [client] req #81   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:44] [client] req #82   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:45] [client] req #83   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:46] [client] req #84   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:47] [client] req #85   -> served by inventory-5496d657fc-882fn (10.244.0.8) items=3
+[22:20:48] [client] req #86   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:49] [client] req #87   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:50] [client] req #88   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:51] [client] req #89   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:52] [client] req #90   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:53] [client] req #91   -> served by inventory-5496d657fc-882fn (10.244.0.8) items=3
+[22:20:54] [client] req #92   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:55] [client] req #93   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+[22:20:56] [client] req #94   -> served by inventory-5496d657fc-m2xkh (10.244.0.5) items=3
+
+# requests per Pod in the last 6s
+   1 served by inventory-5496d657fc-882fn
+   5 served by inventory-5496d657fc-m2xkh
+

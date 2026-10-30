@@ -1,0 +1,17 @@
+
+==================== 2a. Make one Pod FAIL readiness ====================
+$ kubectl exec inventory-5496d657fc-5plj6 -- touch /tmp/not-ready
+
+$ kubectl get pods -l app=inventory -o wide
+NAME                         READY   STATUS    RESTARTS   AGE   IP           NODE                    NOMINATED NODE   READINESS GATES
+inventory-5496d657fc-5plj6   0/1     Running   0          47s   10.244.0.6   module6-control-plane   <none>           <none>
+inventory-5496d657fc-m2xkh   1/1     Running   0          47s   10.244.0.5   module6-control-plane   <none>           <none>
+
+$ kubectl get endpointslices -l kubernetes.io/service-name=inventory-service -o custom-columns=NAME:.metadata.name,ADDRESSES:.endpoints[*].addresses[0],READY:.endpoints[*].conditions.ready,PODS:.endpoints[*].targetRef.name
+NAME                      ADDRESSES               READY        PODS
+inventory-service-5vqwd   10.244.0.6,10.244.0.5   false,true   inventory-5496d657fc-5plj6,inventory-5496d657fc-m2xkh
+
+$ kubectl get events --field-selector involvedObject.name=inventory-5496d657fc-5plj6,reason=Unhealthy -o custom-columns=LAST:.lastTimestamp,REASON:.reason,MESSAGE:.message | tail -3
+LAST                   REASON      MESSAGE
+2026-10-30T22:20:04Z   Unhealthy   Readiness probe failed: HTTP probe failed with statuscode: 503
+

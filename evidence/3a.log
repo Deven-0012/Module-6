@@ -1,0 +1,38 @@
+
+==================== 3a. Delete one Inventory Pod -> Deployment replaces it ====================
+$ kubectl get pods -l app=inventory -o wide
+NAME                         READY   STATUS    RESTARTS   AGE   IP           NODE                    NOMINATED NODE   READINESS GATES
+inventory-5496d657fc-5plj6   1/1     Running   0          81s   10.244.0.6   module6-control-plane   <none>           <none>
+inventory-5496d657fc-m2xkh   1/1     Running   0          81s   10.244.0.5   module6-control-plane   <none>           <none>
+
+$ kubectl get svc inventory-service
+NAME                TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+inventory-service   ClusterIP   10.96.101.197   <none>        8080/TCP   81s
+
+$ kubectl delete pod inventory-5496d657fc-5plj6 --wait=false
+pod "inventory-5496d657fc-5plj6" deleted
+
+$ kubectl get pods -l app=inventory -o wide
+NAME                         READY   STATUS    RESTARTS   AGE   IP           NODE                    NOMINATED NODE   READINESS GATES
+inventory-5496d657fc-882fn   0/1     Running   0          1s    10.244.0.8   module6-control-plane   <none>           <none>
+inventory-5496d657fc-m2xkh   1/1     Running   0          82s   10.244.0.5   module6-control-plane   <none>           <none>
+
+$ kubectl wait --for=delete pod/inventory-5496d657fc-5plj6 --timeout=60s
+
+$ kubectl wait --for=condition=Ready pod -l app=inventory --timeout=60s
+pod/inventory-5496d657fc-882fn condition met
+pod/inventory-5496d657fc-m2xkh condition met
+
+$ kubectl get pods -l app=inventory -o wide
+NAME                         READY   STATUS    RESTARTS   AGE   IP           NODE                    NOMINATED NODE   READINESS GATES
+inventory-5496d657fc-882fn   1/1     Running   0          4s    10.244.0.8   module6-control-plane   <none>           <none>
+inventory-5496d657fc-m2xkh   1/1     Running   0          85s   10.244.0.5   module6-control-plane   <none>           <none>
+
+$ kubectl get svc inventory-service
+NAME                TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+inventory-service   ClusterIP   10.96.101.197   <none>        8080/TCP   85s
+
+$ kubectl get endpointslices -l kubernetes.io/service-name=inventory-service -o custom-columns=NAME:.metadata.name,ADDRESSES:.endpoints[*].addresses[0],READY:.endpoints[*].conditions.ready,PODS:.endpoints[*].targetRef.name
+NAME                      ADDRESSES               READY       PODS
+inventory-service-5vqwd   10.244.0.5,10.244.0.8   true,true   inventory-5496d657fc-m2xkh,inventory-5496d657fc-882fn
+
